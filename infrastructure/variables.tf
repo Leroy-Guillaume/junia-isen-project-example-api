@@ -54,7 +54,7 @@ variable "cosmosdb_account_name" {
 variable "database_name" {
   description = "Nom de la base de données CosmosDB"
   type        = string
-  default = "shop-app-db"
+  default = "shopappdb"
 }
 
 variable "cosmosdb_container_name" {

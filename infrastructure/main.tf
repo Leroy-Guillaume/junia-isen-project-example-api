@@ -47,21 +47,6 @@ module "virtual_network" {
   default_subnet_address_prefix = var.default_subnet_address_prefix # Plage d'adresses IP pour ce sous-réseau.
 }
 
-
-# Module pour CosmosDB
-# Ce module configure un compte CosmosDB, une base de données et ses conteneurs.
-module "cosmosdb" {
-  source                = "./modules/cosmosdb"           # Chemin vers le module local pour CosmosDB.
-  location              = module.resource_group.location  # Région Azure (héritée du groupe de ressources).
-  resource_group_name   = module.resource_group.resource_group_name  # Groupe de ressources pour CosmosDB.
-  cosmosdb_account_name = var.cosmosdb_account_name      # Nom du compte CosmosDB.
-  database_name         = var.database_name             # Nom de la base de données CosmosDB.
-  cosmosdb_subnet_id    = module.virtual_network.app_service_subnet_id  # ID du sous-réseau pour CosmosDB.
-  items_container_name  = var.items_container_name  # Nom du conteneur pour les items.
-  users_container_name  = var.users_container_name  # Nom du conteneur pour les utilisateurs.
-  baskets_container_name = var.baskets_container_name  # Nom du conteneur pour les paniers.
-}
-
 # Module pour App Service
 # Ce module déploie un App Service pour exécuter une application web avec une image Docker.
 module "app_service" {
@@ -78,4 +63,18 @@ module "app_service" {
   docker_user            = var.docker_user                # Identifiant du registre Docker.
   docker_pass            = var.docker_pass                # Mot de passe du registre Docker.
   docker_image           = var.docker_image               # Nom et tag de l'image Docker utilisée pour l'application.
+}
+
+# Module pour CosmosDB
+# Ce module configure un compte CosmosDB, une base de données et ses conteneurs.
+module "cosmosdb" {
+  source                = "./modules/cosmosdb"           # Chemin vers le module local pour CosmosDB.
+  location              = module.resource_group.location  # Région Azure (héritée du groupe de ressources).
+  resource_group_name   = module.resource_group.resource_group_name  # Groupe de ressources pour CosmosDB.
+  cosmosdb_account_name = var.cosmosdb_account_name      # Nom du compte CosmosDB.
+  database_name         = var.database_name             # Nom de la base de données CosmosDB.
+  cosmosdb_subnet_id    = module.virtual_network.app_service_subnet_id  # ID du sous-réseau pour CosmosDB.
+  items_container_name  = var.items_container_name  # Nom du conteneur pour les items.
+  users_container_name  = var.users_container_name  # Nom du conteneur pour les utilisateurs.
+  baskets_container_name = var.baskets_container_name  # Nom du conteneur pour les paniers.
 }
