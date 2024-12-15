@@ -1,13 +1,3 @@
-provider "azurerm" {
-  features {}
-}
-
-# Groupe de ressources pour CosmosDB
-resource "azurerm_resource_group" "shop_app_rg" {
-  name     = var.resource_group_name
-  location = var.location
-}
-
 # Compte CosmosDB
 resource "azurerm_cosmosdb_account" "shop_app_cosmosdb" {
   name                             = var.cosmosdb_account_name
