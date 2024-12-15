@@ -12,6 +12,9 @@ resource "azurerm_subnet" "app_service_subnet" {
   resource_group_name  = var.resource_group_name       # Nom du groupe de ressources parent.
   virtual_network_name = azurerm_virtual_network.application_vnet.name # Réseau virtuel hôte.
   address_prefixes     = [var.subnet_app_service]      # Plage IP réservée pour ce sous-réseau.
+  
+  # Ajout du Service Endpoint pour CosmosDB
+  service_endpoints = ["Microsoft.AzureCosmosDB"]
 
   # Associe ce sous-réseau aux services Azure App Service.
   delegation {
@@ -30,6 +33,11 @@ resource "azurerm_subnet" "cosmosdb_subnet" {
   virtual_network_name = azurerm_virtual_network.application_vnet.name # Réseau virtuel hôte.
   address_prefixes     = [var.subnet_cosmosdb]          # Plage d'adresses assignée à ce sous-réseau.
   service_endpoints    = ["Microsoft.AzureCosmosDB"]    # Autorisation d'accès à CosmosDB.
+
+  # Ajout de dépendances explicites pour garantir la création correcte.
+  depends_on = [
+    azurerm_virtual_network.application_vnet
+  ]
 }
 
 # Sous-réseau générique pour d'autres ressources, comme des machines virtuelles.

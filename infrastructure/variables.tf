@@ -9,7 +9,7 @@ variable "prefix" {
 variable "location" {
   description = "Région Azure pour le déploiement (ex : East US, West Europe)"
   type        = string
-  default = "East US"
+  default = "France Central"
 }
 
 # Nom du groupe de ressources
@@ -48,7 +48,7 @@ variable "subnet_address_prefixes" {
 variable "cosmosdb_account_name" {
   description = "Nom du compte CosmosDB"
   type        = string
-  default = "shop-app-cosmosdbbis"
+  default = "shop-app-projet-cloud-computing"
 }
 
 variable "database_name" {
