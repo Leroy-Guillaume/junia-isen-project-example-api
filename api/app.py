@@ -23,13 +23,16 @@ USERS_COLLECTION = "Users"
 app = Flask(__name__)
 CORS(app)
 
-# Configuration des limiteurs
+# Créer l'instance du Limiter sans l'argument "app"
 limiter = Limiter(
-    get_remote_address,
-    app=app,
+    key_func=get_remote_address,  # Utilisez key_func au lieu de passer directement la fonction
     default_limits=["20 per minute"],
     storage_uri="memory://",
 )
+
+# Initialiser Flask-Limiter avec l'application Flask
+limiter.init_app(app)
+
 
 # Initialisation du client Cosmos DB
 cosmos_client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
@@ -109,6 +112,7 @@ def fetch_items():
         return jsonify({"items": items}), 200
     except exceptions.CosmosHttpResponseError as error:
         return jsonify({"error": str(error)}), 500
+    
 
 # Gestion des erreurs globales
 @app.errorhandler(401)
