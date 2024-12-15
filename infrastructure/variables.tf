@@ -48,7 +48,7 @@ variable "subnet_address_prefixes" {
 variable "cosmosdb_account_name" {
   description = "Nom du compte CosmosDB"
   type        = string
-  default = "shop-app-cosmosdb"
+  default = "shop-app-cosmosdbbis"
 }
 
 variable "database_name" {
