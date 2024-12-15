@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: waytel/shop-app 
+  IMAGE_NAME: waytel/shop-app
 
 jobs:
   build-and-deploy:
@@ -34,16 +34,11 @@ jobs:
         docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ./api
         docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-    # Étape 5 : Connexion à Azure avec le fichier de profil de publication
-    - name: Login to Azure Web App
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-
-    # Étape 6 : Déployer l'image Docker sur Azure App Service
+    # Étape 5 : Déployer l'image Docker sur Azure App Service avec le Publish Profile
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: shop-app-service
+        app-name: shop-app-app 
         slot-name: production
         images: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
