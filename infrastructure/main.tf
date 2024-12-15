@@ -19,7 +19,6 @@ terraform {
 # Ce module crée un groupe de ressources dans Azure pour regrouper toutes les ressources.
 module "resource_group" {
   source              = "./modules/resource_group"  # Chemin vers le module local pour le groupe de ressources.
-  prefix              = var.prefix                  # Préfixe pour nommer les ressources.
   location            = var.location                # Région Azure où déployer les ressources.
   resource_group_name = var.resource_group_name     # Nom du groupe de ressources.
 }
@@ -65,7 +64,7 @@ module "app_service" {
   region                 = var.location                    # Région Azure pour l'App Service.
   resource_group         = module.resource_group.resource_group_name  # Groupe de ressources pour App Service.
   subnet_id              = module.virtual_network.app_service_subnet_id  # ID du sous-réseau utilisé par App Service.
-  cosmosdb_db_name       = module.cosmosdb.database_name   # Nom de la base de données CosmosDB utilisée.
+  cosmosdb_db_name       = module.cosmosdb.cosmosdb_database_name   # Nom de la base de données CosmosDB utilisée.
   cosmosdb_container_name = var.cosmosdb_container_name    # Nom du conteneur CosmosDB utilisé.
   cosmosdb_key           = module.cosmosdb.cosmosdb_primary_key  # Clé d'accès au compte CosmosDB.
   cosmosdb_url           = module.cosmosdb.cosmosdb_endpoint  # Endpoint du compte CosmosDB.

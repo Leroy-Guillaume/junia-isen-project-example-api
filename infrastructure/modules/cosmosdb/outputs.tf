@@ -1,6 +1,6 @@
-# Endpoint de connexion au compte CosmosDB
+# Expose l'endpoint principal de connexion au compte CosmosDB
 output "cosmosdb_endpoint" {
-  description = "L'URL endpoint pour accéder au compte CosmosDB"
+  description = "URL de l'endpoint principal pour accéder au compte CosmosDB"
   value       = azurerm_cosmosdb_account.shop_app_cosmosdb.endpoint
 }
 
@@ -18,24 +18,24 @@ output "cosmosdb_secondary_key" {
   sensitive   = true
 }
 
-# Nom de la base de données CosmosDB
+# Expose le nom de la base de données CosmosDB
 output "cosmosdb_database_name" {
-  description = "Nom de la base de données CosmosDB"
+  description = "Nom de la base de données créée dans CosmosDB"
   value       = azurerm_cosmosdb_sql_database.shop_app_db.name
 }
 
-# Nom des conteneurs CosmosDB
+# Expose les noms des conteneurs dans CosmosDB
 output "cosmosdb_items_container_name" {
-  description = "Nom du conteneur Items dans CosmosDB"
+  description = "Nom du conteneur 'Items' dans CosmosDB"
   value       = azurerm_cosmosdb_sql_container.items_container.name
 }
 
 output "cosmosdb_users_container_name" {
-  description = "Nom du conteneur Users dans CosmosDB"
+  description = "Nom du conteneur 'Users' dans CosmosDB"
   value       = azurerm_cosmosdb_sql_container.users_container.name
 }
 
 output "cosmosdb_baskets_container_name" {
-  description = "Nom du conteneur Baskets dans CosmosDB"
+  description = "Nom du conteneur 'Baskets' dans CosmosDB"
   value       = azurerm_cosmosdb_sql_container.baskets_container.name
 }

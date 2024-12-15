@@ -7,7 +7,7 @@ output "app_service_id" {
 # URL publique par défaut de l'App Service
 output "app_service_default_hostname" {
   description = "L'URL par défaut de l'App Service"
-  value       = azurerm_linux_web_app.web_app.default_site_hostname
+  value       = azurerm_linux_web_app.web_app.default_hostname
 }
 
 # L'ID du plan de service associé
