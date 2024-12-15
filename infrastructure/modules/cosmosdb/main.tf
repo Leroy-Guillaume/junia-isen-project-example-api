@@ -1,8 +1,8 @@
 # Compte CosmosDB
 resource "azurerm_cosmosdb_account" "shop_app_cosmosdb" {
   name                             = var.cosmosdb_account_name
-  location                         = azurerm_resource_group.shop_app_rg.location
-  resource_group_name              = azurerm_resource_group.shop_app_rg.name
+  location                         = var.location
+  resource_group_name              = var.resource_group_name
   offer_type                       = "Standard"
   kind                             = "GlobalDocumentDB"
   is_virtual_network_filter_enabled = true
@@ -17,7 +17,7 @@ resource "azurerm_cosmosdb_account" "shop_app_cosmosdb" {
   }
 
   geo_location {
-    location          = azurerm_resource_group.shop_app_rg.location
+    location          = var.location
     failover_priority = 0
   }
 
@@ -29,14 +29,14 @@ resource "azurerm_cosmosdb_account" "shop_app_cosmosdb" {
 # Base de données CosmosDB
 resource "azurerm_cosmosdb_sql_database" "shop_app_db" {
   name                = var.database_name
-  resource_group_name = azurerm_resource_group.shop_app_rg.name
+  resource_group_name = var.resource_group_name
   account_name        = azurerm_cosmosdb_account.shop_app_cosmosdb.name
 }
 
 # Conteneur Items
 resource "azurerm_cosmosdb_sql_container" "items_container" {
   name                = "Items"
-  resource_group_name = azurerm_resource_group.shop_app_rg.name
+  resource_group_name = var.resource_group_name
   account_name        = azurerm_cosmosdb_account.shop_app_cosmosdb.name
   database_name       = azurerm_cosmosdb_sql_database.shop_app_db.name
   partition_key_paths = ["/ItemsId"]
@@ -46,7 +46,7 @@ resource "azurerm_cosmosdb_sql_container" "items_container" {
 # Conteneur Users
 resource "azurerm_cosmosdb_sql_container" "users_container" {
   name                = "Users"
-  resource_group_name = azurerm_resource_group.shop_app_rg.name
+  resource_group_name = var.resource_group_name
   account_name        = azurerm_cosmosdb_account.shop_app_cosmosdb.name
   database_name       = azurerm_cosmosdb_sql_database.shop_app_db.name
   partition_key_paths = ["/userId"]
@@ -56,7 +56,7 @@ resource "azurerm_cosmosdb_sql_container" "users_container" {
 # Conteneur Baskets
 resource "azurerm_cosmosdb_sql_container" "baskets_container" {
   name                = "Baskets"
-  resource_group_name = azurerm_resource_group.shop_app_rg.name
+  resource_group_name = var.resource_group_name
   account_name        = azurerm_cosmosdb_account.shop_app_cosmosdb.name
   database_name       = azurerm_cosmosdb_sql_database.shop_app_db.name
   partition_key_paths = ["/basketId"]
@@ -66,5 +66,5 @@ resource "azurerm_cosmosdb_sql_container" "baskets_container" {
 # Accès aux informations du compte CosmosDB
 data "azurerm_cosmosdb_account" "shop_app_keys" {
   name                = azurerm_cosmosdb_account.shop_app_cosmosdb.name
-  resource_group_name = azurerm_resource_group.shop_app_rg.name
+  resource_group_name = var.resource_group_name
 }
