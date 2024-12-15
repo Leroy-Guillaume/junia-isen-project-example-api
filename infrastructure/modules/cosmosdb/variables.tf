@@ -37,3 +37,8 @@ variable "baskets_container_name" {
   description = "Nom du conteneur pour les paniers"
   type        = string
 }
+
+variable "vnet_id" {
+  description = "ID du Virtual Network auquel CosmosDB est associé"
+  type        = string
+}

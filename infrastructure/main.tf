@@ -74,6 +74,7 @@ module "cosmosdb" {
   cosmosdb_account_name = var.cosmosdb_account_name      # Nom du compte CosmosDB.
   database_name         = var.database_name             # Nom de la base de données CosmosDB.
   cosmosdb_subnet_id    = module.virtual_network.app_service_subnet_id  # ID du sous-réseau pour CosmosDB.
+  vnet_id               = module.virtual_network.vnet_id #Passer l'ID du réseau virtuel pour autoriser l'accès à CosmosDB.
   items_container_name  = var.items_container_name  # Nom du conteneur pour les items.
   users_container_name  = var.users_container_name  # Nom du conteneur pour les utilisateurs.
   baskets_container_name = var.baskets_container_name  # Nom du conteneur pour les paniers.

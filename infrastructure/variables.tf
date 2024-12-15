@@ -152,3 +152,9 @@ variable "subscription_id" {
   description = "L'ID de l'abonnement Azure"
   type        = string
 }
+
+variable "vnet_id" {
+  description = "ID du Virtual Network auquel CosmosDB est associé"
+  type        = string
+}
+
