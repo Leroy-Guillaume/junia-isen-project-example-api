@@ -34,6 +34,7 @@ resource "azurerm_subnet" "cosmosdb_subnet" {
 
 # Sous-réseau générique pour d'autres ressources, comme des machines virtuelles.
 resource "azurerm_subnet" "general_subnet" {
+  depends_on          = [azurerm_virtual_network.application_vnet]  # Ajoute une dépendance explicite
   name                 = var.default_subnet_name         # Nom du sous-réseau par défaut.
   resource_group_name  = var.resource_group_name         # Nom du groupe de ressources parent.
   virtual_network_name = azurerm_virtual_network.application_vnet.name # Réseau virtuel hôte.
