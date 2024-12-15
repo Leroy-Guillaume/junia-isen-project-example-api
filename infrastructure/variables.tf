@@ -147,3 +147,8 @@ variable "default_subnet_address_prefix" {
   type        = string
   default = "10.0.5.0/24"
 }
+
+variable "subscription_id" {
+  description = "L'ID de l'abonnement Azure"
+  type        = string
+}

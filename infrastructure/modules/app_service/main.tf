@@ -20,10 +20,15 @@ resource "azurerm_linux_web_app" "web_app" {
   # Configuration des conteneurs Docker
   site_config {
     always_on = true
-    linux_fx_version = "DOCKER|${var.docker_image}" # Utilisation de l'image Docker définie dans les variables
+       # Configuration pour Docker
+    application_stack {
+      docker_registry_url = "https://${var.docker_user}.azurecr.io"
+      docker_image_name = var.docker_image
+      docker_registry_username = var.docker_user
+      docker_registry_password = var.docker_pass
+    }
 
-    # Configurations réseau (ajout au VNet)
-    vnet_route_all_enabled    = true
+
   }
 
   virtual_network_subnet_id = var.subnet_id

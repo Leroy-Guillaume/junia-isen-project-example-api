@@ -2,6 +2,7 @@
 # Déclaration du fournisseur Azure (azurerm) utilisé pour interagir avec les services Azure.
 provider "azurerm" {
   features {}  # Active toutes les fonctionnalités par défaut du fournisseur Azure.
+  subscription_id = var.subscription_id  # ID de l'abonnement Azure à utiliser pour ce déploiement.
 }
 
 # Configuration globale de Terraform
