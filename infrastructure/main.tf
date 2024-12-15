@@ -23,17 +23,29 @@ module "resource_group" {
   resource_group_name = var.resource_group_name     # Nom du groupe de ressources.
 }
 
-# Module pour le Virtual Network
-# Ce module crée un réseau virtuel (VNet) et ses sous-réseaux dans Azure.
+# Module pour le Virtual Network (VNet)
+# Ce module configure un réseau virtuel Azure et plusieurs sous-réseaux.
 module "virtual_network" {
-  source                  = "./modules/virtual_network"  # Chemin vers le module local pour le Virtual Network.
-  vnet_name               = var.vnet_name               # Nom du réseau virtuel.
-  address_space           = var.address_space           # Plage d'adresses IP du réseau virtuel.
-  location                = module.resource_group.location  # Région Azure (héritée du groupe de ressources).
-  resource_group_name     = module.resource_group.resource_group_name  # Groupe de ressources où déployer le VNet.
-  subnet_name             = var.subnet_name             # Nom du sous-réseau principal.
-  subnet_address_prefixes = var.subnet_address_prefixes  # Plage d'adresses IP pour le sous-réseau.
+  source                       = "./modules/virtual_network" # Chemin vers le module pour le Virtual Network.
+  
+  vnet_name                    = var.vnet_name              # Nom du réseau virtuel.
+  address_space                = var.address_space          # Plage d'adresses IP pour le réseau virtuel.
+  location                     = module.resource_group.location # Région Azure (héritée du groupe de ressources).
+  resource_group_name          = module.resource_group.resource_group_name # Nom du groupe de ressources.
+
+  # Sous-réseau pour l'App Service
+  app_service_subnet_name      = var.app_service_subnet_name  # Nom du sous-réseau pour l'App Service.
+  subnet_app_service           = var.subnet_app_service       # Plage d'adresses IP pour ce sous-réseau.
+
+  # Sous-réseau pour CosmosDB
+  cosmosdb_subnet_name         = var.cosmosdb_subnet_name     # Nom du sous-réseau dédié à CosmosDB.
+  subnet_cosmosdb              = var.subnet_cosmosdb          # Plage d'adresses IP pour ce sous-réseau.
+
+  # Sous-réseau par défaut
+  default_subnet_name          = var.default_subnet_name      # Nom du sous-réseau par défaut.
+  default_subnet_address_prefix = var.default_subnet_address_prefix # Plage d'adresses IP pour ce sous-réseau.
 }
+
 
 # Module pour CosmosDB
 # Ce module configure un compte CosmosDB, une base de données et ses conteneurs.
@@ -44,16 +56,9 @@ module "cosmosdb" {
   cosmosdb_account_name = var.cosmosdb_account_name      # Nom du compte CosmosDB.
   database_name         = var.database_name             # Nom de la base de données CosmosDB.
   cosmosdb_subnet_id    = module.virtual_network.app_service_subnet_id  # ID du sous-réseau pour CosmosDB.
-}
-
-# Module pour le Blob Storage
-# Ce module configure un compte de stockage Azure Blob et un conteneur associé.
-module "blob_storage" {
-  source               = "./modules/blob_storage"         # Chemin vers le module local pour Blob Storage.
-  location             = module.resource_group.location    # Région Azure (héritée du groupe de ressources).
-  resource_group_name  = module.resource_group.resource_group_name  # Groupe de ressources pour Blob Storage.
-  storage_account_name = var.storage_account_name          # Nom du compte de stockage.
-  container_name       = var.container_name               # Nom du conteneur Blob.
+  items_container_name  = var.items_container_name  # Nom du conteneur pour les items.
+  users_container_name  = var.users_container_name  # Nom du conteneur pour les utilisateurs.
+  baskets_container_name = var.baskets_container_name  # Nom du conteneur pour les paniers.
 }
 
 # Module pour App Service

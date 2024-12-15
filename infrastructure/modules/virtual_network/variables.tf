@@ -1,29 +1,57 @@
+# Nom du réseau virtuel
 variable "vnet_name" {
-  description = "The name of the virtual network (VNet) to be created."
+  description = "Nom du réseau virtuel à créer"
   type        = string
 }
 
+# Adresse IP pour le réseau virtuel
 variable "address_space" {
-  description = "The list of address spaces to assign to the virtual network (e.g., ['10.0.0.0/16'])."
-  type        = list(string)
-}
-
-variable "location" {
-  description = "The Azure region where the virtual network and associated resources will be deployed."
+  description = "Plage d'adresses IP pour le réseau virtuel (ex: ['10.0.0.0/16'])"
   type        = string
 }
 
+# Nom du groupe de ressources
 variable "resource_group_name" {
-  description = "The name of the Azure resource group where the virtual network and its resources will be created."
+  description = "Nom du groupe de ressources où le réseau virtuel sera déployé"
   type        = string
 }
 
-variable "subnet_name" {
-  description = "The name of the subnet to be created within the virtual network."
+# Région de déploiement
+variable "location" {
+  description = "Région Azure pour le déploiement des ressources"
   type        = string
 }
 
-variable "subnet_address_prefixes" {
-  description = "The list of address prefixes to assign to the subnet (e.g., ['10.0.1.0/24'])."
-  type        = list(string)
+# Sous-réseau pour l'App Service
+variable "app_service_subnet_name" {
+  description = "Nom du sous-réseau dédié à l'App Service"
+  type        = string
 }
+
+variable "subnet_app_service" {
+  description = "Plage d'adresses IP pour le sous-réseau App Service (ex: ['10.0.1.0/24'])"
+  type        = string
+}
+
+# Sous-réseau pour CosmosDB
+variable "cosmosdb_subnet_name" {
+  description = "Nom du sous-réseau dédié à CosmosDB"
+  type        = string
+}
+
+variable "subnet_cosmosdb" {
+  description = "Plage d'adresses IP pour le sous-réseau CosmosDB (ex: ['10.0.2.0/24'])"
+  type        = string
+}
+
+# Sous-réseau par défaut pour d'autres usages
+variable "default_subnet_name" {
+  description = "Nom du sous-réseau par défaut pour les ressources générales"
+  type        = string
+}
+
+variable "default_subnet_address_prefix" {
+  description = "Plage d'adresses IP pour le sous-réseau par défaut (ex: ['10.0.3.0/24'])"
+  type        = string
+}
+
