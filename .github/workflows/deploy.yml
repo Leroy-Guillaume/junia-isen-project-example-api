@@ -55,7 +55,7 @@ jobs:
         inlineScript: |
           az webapp config appsettings set \
             --name shop-app-app \
-            --resource-group <RESOURCE_GROUP> \
+            --resource-group shop-app-rg \
             --settings \
             COSMOSDB_ENDPOINT="${{ secrets.COSMOSDB_ENDPOINT }}" \
             COSMOSDB_READONLY_KEY="${{ secrets.COSMOSDB_READONLY_KEY }}" \
