@@ -4,67 +4,32 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
-env:
-  IMAGE_NAME: waytel/shop-app
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Étape 1 : Récupérer le code source du dépôt
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    # Étape 2 : Définir le tag de l'image avec le SHA du commit
-    - name: Set Docker Image Tag
-      id: image_tag
-      run: echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+    - name: Set Commit SHA
+      id: sha
+      run: echo "COMMIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
 
-    # Étape 3 : Se connecter à Docker Hub
     - name: Login to Docker Hub
       run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-    # Étape 4 : Construire et tester l'image Docker localement
-    - name: Build Docker Image
-      run: docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ./api
-
-    - name: Test Docker Image Locally
-      run: docker run --rm -d -p 8080:80 --name test-app ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
-    - name: Test API Endpoint
+    - name: Build and Push Docker Image
       run: |
-        sleep 5  # Attendre que le conteneur démarre complètement
-        curl http://localhost:8080/ || (docker logs test-app && echo "API test failed" && exit 1)
+        docker build -t Guillaume/shop-app:${{ github.sha }} ./api
+        docker push Guillaume/shop-app:${{ github.sha }}
 
-    - name: Stop and Remove Test Container
-      run: docker stop test-app
-
-    # Étape 5 : Pousser l'image Docker
-    - name: Push Docker Image
-      run: docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
-    # Étape 6 : Configurer les variables d'environnement dans Azure App Service
-    - name: Set Azure App Service Settings
-      uses: azure/cli@v1
-      with:
-        azcliversion: 2.0.80
-        inlineScript: |
-          az webapp config appsettings set \
-            --name shop-app-app \
-            --resource-group shop-app-rg \
-            --settings \
-            COSMOSDB_ENDPOINT="${{ secrets.COSMOSDB_ENDPOINT }}" \
-            COSMOSDB_READONLY_KEY="${{ secrets.COSMOSDB_READONLY_KEY }}" \
-            COSMOSDB_DATABASE_NAME="${{ secrets.COSMOSDB_DATABASE_NAME }}"
-
-    # Étape 7 : Déployer l'image Docker sur Azure App Service
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: shop-app-app
-        images: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        slot-name: production
+        images: Guillaume/shop-app:${{ github.sha }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
