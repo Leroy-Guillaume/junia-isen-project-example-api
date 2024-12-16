@@ -40,7 +40,6 @@ jobs:
         sleep 5  # Attendre que le conteneur démarre complètement
         curl http://localhost:8080/ || (docker logs test-app && echo "API test failed" && exit 1)
 
-
     - name: Stop and Remove Test Container
       run: docker stop test-app
 
@@ -48,7 +47,21 @@ jobs:
     - name: Push Docker Image
       run: docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-    # Étape 6 : Déployer l'image Docker sur Azure App Service
+    # Étape 6 : Configurer les variables d'environnement dans Azure App Service
+    - name: Set Azure App Service Settings
+      uses: azure/cli@v1
+      with:
+        azcliversion: 2.0.80
+        inlineScript: |
+          az webapp config appsettings set \
+            --name shop-app-app \
+            --resource-group <RESOURCE_GROUP> \
+            --settings \
+            COSMOSDB_ENDPOINT="${{ secrets.COSMOSDB_ENDPOINT }}" \
+            COSMOSDB_READONLY_KEY="${{ secrets.COSMOSDB_READONLY_KEY }}" \
+            COSMOSDB_DATABASE_NAME="${{ secrets.COSMOSDB_DATABASE_NAME }}"
+
+    # Étape 7 : Déployer l'image Docker sur Azure App Service
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
